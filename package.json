@@ -1,0 +1,22 @@
+{
+  "name": "eccommerce_platform",
+  "version": "1.0.0",
+  "description": "Shopping cart",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ashish911/BiShop.git"
+  },
+  "author": "Ashish Dongol",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ashish911/BiShop/issues"
+  },
+  "homepage": "https://github.com/Ashish911/BiShop#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
