@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+import morgan from 'morgan';
 import connectDB from './config/db.js';
 
 import productRoute from './routes/productRoute.js';
@@ -11,11 +13,17 @@ connectDB();
 
 const app = express();
 
+app.use(morgan('dev'));
+
 app.get('/', (req, res) => {
   res.send('API is runnning...');
 });
 
 app.use('/api/products', productRoute);
+
+app.use(notFound);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
