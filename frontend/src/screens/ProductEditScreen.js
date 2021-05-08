@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import FormContainer from '../components/FormContainer';
-import { listProductDetails } from '../actions/productActions';
-// import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
+import { listProductDetails, updateProduct } from '../actions/productActions';
+import { PRODUCT_UPDATE_RESET } from '../constants/productConstants';
 
 const ProductEditScreen = ({ match, history }) => {
   const productId = match.params.id;
@@ -35,7 +35,7 @@ const ProductEditScreen = ({ match, history }) => {
 
   useEffect(() => {
     if (successUpdate) {
-      // dispatch({ type: PRODUCT_UPDATE_RESET });
+      dispatch({ type: PRODUCT_UPDATE_RESET });
       history.push('/admin/productlist');
     } else {
       if (!product.name || product._id !== productId) {
@@ -77,18 +77,18 @@ const ProductEditScreen = ({ match, history }) => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // dispatch(
-    //   updateProduct({
-    //     _id: productId,
-    //     name,
-    //     price,
-    //     image,
-    //     brand,
-    //     category,
-    //     description,
-    //     countInStock
-    //   })
-    // );
+    dispatch(
+      updateProduct({
+        _id: productId,
+        name,
+        price,
+        image,
+        brand,
+        category,
+        description,
+        countInStock
+      })
+    );
   };
 
   return (
