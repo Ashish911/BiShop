@@ -5,9 +5,16 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getOrderDetails, payOrder } from '../actions/orderActions';
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder
+} from '../actions/orderActions';
 import axios from 'axios';
-import { ORDER_PAY_RESET } from '../constants/orderConstants';
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET
+} from '../constants/orderConstants';
 
 const OrderScreen = ({ match }) => {
   const orderId = match.params.id;
@@ -16,11 +23,17 @@ const OrderScreen = ({ match }) => {
 
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user);
+  const { userInfo } = user;
+
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
 
   if (!loading) {
     const addDecimals = (num) => {
@@ -60,11 +73,12 @@ const OrderScreen = ({ match }) => {
   // }, [dispatch, orderId, successPay, order]);
 
   useEffect(() => {
-    if (!order || successPay) {
+    if (!order || successPay || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     }
-  }, [dispatch, orderId, successPay, order]);
+  }, [dispatch, orderId, successPay, order, successDeliver]);
 
   // const successPaymentHandler = (paymentResult) => {
   //   console.log(paymentResult);
@@ -82,6 +96,10 @@ const OrderScreen = ({ match }) => {
     };
 
     dispatch(payOrder(orderId, paymentResult));
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
@@ -192,7 +210,7 @@ const OrderScreen = ({ match }) => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && (
+              {!order.isPaid && !userInfo.isAdmin && (
                 <ListGroup.Item>
                   {loadingPay ? (
                     <Loader />
@@ -213,6 +231,17 @@ const OrderScreen = ({ match }) => {
                       onSuccess={successPaymentHandler}
                     />
                   )} */}
+                </ListGroup.Item>
+              )}
+              {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button
+                    type='button'
+                    className='btn-block'
+                    onClick={deliverHandler}
+                  >
+                    Mark As Delivered
+                  </Button>
                 </ListGroup.Item>
               )}
             </ListGroup>
