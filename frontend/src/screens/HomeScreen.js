@@ -4,6 +4,7 @@ import { Col, Row } from 'react-bootstrap';
 import Product from '../components/Product';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
+import ProductCarosel from '../components/ProductCarosel';
 import Paginate from '../components/Paginate';
 import { listProducts } from '../actions/productActions';
 
@@ -23,6 +24,7 @@ const HomeScreen = ({ match }) => {
 
   return (
     <>
+      {!keyword && <ProductCarosel />}
       <h1>Latest Products</h1>
       {loading ? (
         <Loader />
